@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Spring Boot API - todoapp::todo-service
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+Resources:
+  TodoServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: todoapp.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: s3://todoapiassignment/834449338400e3af0e62a43068cf3b9b
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 30
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+Outputs:
+  TodoServiceApi:
+    Description: URL for application
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ping
+    Export:
+      Name: TodoServiceApi
